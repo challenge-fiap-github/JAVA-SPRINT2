@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import service.LogAtividadeService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
@@ -23,15 +25,20 @@ public class LogAtividadeController {
 
     // Listar logs de atividade de um usuário
     @GetMapping("/usuario/{usuarioId}")
-    public ResponseEntity<CollectionModel<LogAtividade>> listarLogsPorUsuario(@PathVariable Long usuarioId) {
+    public ResponseEntity<CollectionModel<EntityModel<LogAtividade>>> listarLogsPorUsuario(@PathVariable Long usuarioId) {
         List<LogAtividade> logs = logAtividadeService.listarLogsPorUsuario(usuarioId);
-        logs.forEach(log -> log.add(linkTo(methodOn(LogAtividadeController.class).obterLog(log.getId())).withSelfRel()));
 
-        CollectionModel<LogAtividade> resource = CollectionModel.of(logs,
+        List<EntityModel<LogAtividade>> logsModel = logs.stream()
+                .map(log -> EntityModel.of(log,
+                        linkTo(methodOn(LogAtividadeController.class).obterLog(log.getId())).withSelfRel()))
+                .collect(Collectors.toList());
+
+        CollectionModel<EntityModel<LogAtividade>> resource = CollectionModel.of(logsModel,
                 linkTo(methodOn(LogAtividadeController.class).listarLogsPorUsuario(usuarioId)).withSelfRel());
 
         return ResponseEntity.ok(resource);
     }
+
 
     // Obter log de atividade por ID
     @GetMapping("/{id}")

@@ -6,8 +6,10 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import service.PontuacaoService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
@@ -20,11 +22,16 @@ public class PontuacaoController {
 
     // Obter pontuações de um usuário
     @GetMapping("/usuario/{usuarioId}")
-    public ResponseEntity<CollectionModel<Pontuacao>> listarPontuacoesPorUsuario(@PathVariable Long usuarioId) {
+    public ResponseEntity<CollectionModel<EntityModel<Pontuacao>>> listarPontuacoesPorUsuario(@PathVariable Long usuarioId) {
         List<Pontuacao> pontuacoes = pontuacaoService.listarPontuacoesPorUsuario(usuarioId);
-        pontuacoes.forEach(p -> p.add(linkTo(methodOn(PontuacaoController.class).obterPontuacao(p.getId())).withSelfRel()));
 
-        CollectionModel<Pontuacao> resource = CollectionModel.of(pontuacoes,
+        List<EntityModel<Pontuacao>> pontuacoesModel = pontuacoes.stream()
+                .map(p -> EntityModel.of(p,
+                        linkTo(methodOn(PontuacaoController.class).obterPontuacao(p.getId())).withSelfRel(),
+                        linkTo(methodOn(PontuacaoController.class).listarPontuacoesPorUsuario(usuarioId)).withRel("pontuacoes")))
+                .collect(Collectors.toList());
+
+        CollectionModel<EntityModel<Pontuacao>> resource = CollectionModel.of(pontuacoesModel,
                 linkTo(methodOn(PontuacaoController.class).listarPontuacoesPorUsuario(usuarioId)).withSelfRel());
 
         return ResponseEntity.ok(resource);

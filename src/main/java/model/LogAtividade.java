@@ -2,6 +2,7 @@ package model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.hateoas.Link;
 
 import java.security.Timestamp;
 
@@ -29,4 +30,5 @@ public class LogAtividade {
     public void prePersist() {
         dataHora = new Timestamp(System.currentTimeMillis());
     }
+
 }

@@ -6,8 +6,10 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import service.SinistroService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
@@ -20,15 +22,20 @@ public class SinistroController {
 
     // Listar sinistros de um usuário
     @GetMapping("/usuario/{usuarioId}")
-    public ResponseEntity<CollectionModel<Sinistro>> listarSinistrosPorUsuario(@PathVariable Long usuarioId) {
+    public ResponseEntity<CollectionModel<EntityModel<Sinistro>>> listarSinistrosPorUsuario(@PathVariable Long usuarioId) {
         List<Sinistro> sinistros = sinistroService.listarSinistrosPorUsuario(usuarioId);
-        sinistros.forEach(s -> s.add(linkTo(methodOn(SinistroController.class).obterSinistro(s.getId())).withSelfRel()));
 
-        CollectionModel<Sinistro> resource = CollectionModel.of(sinistros,
+        List<EntityModel<Sinistro>> sinistrosModel = sinistros.stream()
+                .map(s -> EntityModel.of(s,
+                        linkTo(methodOn(SinistroController.class).obterSinistro(s.getId())).withSelfRel()))
+                .collect(Collectors.toList());
+
+        CollectionModel<EntityModel<Sinistro>> resource = CollectionModel.of(sinistrosModel,
                 linkTo(methodOn(SinistroController.class).listarSinistrosPorUsuario(usuarioId)).withSelfRel());
 
         return ResponseEntity.ok(resource);
     }
+
 
     // Obter sinistro por ID
     @GetMapping("/{id}")

@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import service.ConquistaService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
@@ -23,11 +25,15 @@ public class ConquistaController {
 
     // Listar conquistas disponíveis
     @GetMapping
-    public ResponseEntity<CollectionModel<Conquista>> listarConquistas() {
+    public ResponseEntity<CollectionModel<EntityModel<Conquista>>> listarConquistas() {
         List<Conquista> conquistas = conquistaService.listarConquistas();
-        conquistas.forEach(c -> c.add(linkTo(methodOn(ConquistaController.class).obterConquista(c.getId())).withSelfRel()));
 
-        CollectionModel<Conquista> resource = CollectionModel.of(conquistas,
+        List<EntityModel<Conquista>> conquistasModel = conquistas.stream()
+                .map(c -> EntityModel.of(c,
+                        linkTo(methodOn(ConquistaController.class).obterConquista(c.getId())).withSelfRel()))
+                .collect(Collectors.toList());
+
+        CollectionModel<EntityModel<Conquista>> resource = CollectionModel.of(conquistasModel,
                 linkTo(methodOn(ConquistaController.class).listarConquistas()).withSelfRel());
 
         return ResponseEntity.ok(resource);
@@ -46,11 +52,15 @@ public class ConquistaController {
 
     // Obter conquistas de um usuário
     @GetMapping("/usuario/{usuarioId}")
-    public ResponseEntity<CollectionModel<Conquista>> listarConquistasPorUsuario(@PathVariable Long usuarioId) {
+    public ResponseEntity<CollectionModel<EntityModel<Conquista>>> listarConquistasPorUsuario(@PathVariable Long usuarioId) {
         List<Conquista> conquistas = conquistaService.listarConquistasPorUsuario(usuarioId);
-        conquistas.forEach(c -> c.add(linkTo(methodOn(ConquistaController.class).obterConquista(c.getId())).withSelfRel()));
 
-        CollectionModel<Conquista> resource = CollectionModel.of(conquistas,
+        List<EntityModel<Conquista>> conquistasModel = conquistas.stream()
+                .map(c -> EntityModel.of(c,
+                        linkTo(methodOn(ConquistaController.class).obterConquista(c.getId())).withSelfRel()))
+                .collect(Collectors.toList());
+
+        CollectionModel<EntityModel<Conquista>> resource = CollectionModel.of(conquistasModel,
                 linkTo(methodOn(ConquistaController.class).listarConquistasPorUsuario(usuarioId)).withSelfRel());
 
         return ResponseEntity.ok(resource);
