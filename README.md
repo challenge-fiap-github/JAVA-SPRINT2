@@ -18,7 +18,6 @@ Este projeto é uma aplicação Spring Boot desenvolvida para a **OdontoVision**
 - **Banco de Dados**: Oracle (produção) e H2 (testes).
 - **Segurança**: Spring Security para autenticação e autorização.
 - **API RESTful**: Seguindo boas práticas e nível 3 de maturidade REST (HATEOAS).
-- **Lombok**: Redução de verbosidade do código.
 - **JPA/Hibernate**: Persistência e mapeamento objeto-relacional.
 - **IA**: Random Forest para análise de padrões e monitoramento de fraudes.
 
@@ -84,13 +83,6 @@ A aplicação foi estruturada em camadas para facilitar a organização do códi
         <optional>true</optional>
     </dependency>
 
-    <!-- Lombok para reduzir verbosidade -->
-    <dependency>
-        <groupId>org.projectlombok</groupId>
-        <artifactId>lombok</artifactId>
-        <optional>true</optional>
-    </dependency>
-
     <!-- Spring Boot Starter Test -->
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -130,7 +122,15 @@ spring.jpa.hibernate.ddl-auto=update
 spring.h2.console.enabled=true
 ```
 
-Após a transição para o ambiente de produção, a aplicação será configurada para utilizar o banco de dados **Oracle**.
+Para o ambiente de produção, a aplicação será configurada para utilizar o banco de dados **Oracle**. A configuração esperada no `application.properties` para Oracle seria semelhante a esta:
+
+```properties
+spring.datasource.url=jdbc:oracle:thin:@//host:port/service
+spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
+spring.datasource.username=YOUR_ORACLE_USERNAME
+spring.datasource.password=YOUR_ORACLE_PASSWORD
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.Oracle12cDialect
+```
 
 ### Acessando o Console do H2
 
@@ -138,31 +138,93 @@ Para acessar o console do H2 e visualizar os dados, inicie a aplicação e naveg
 - [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
 - Use a URL do banco de dados `jdbc:h2:mem:testdb` e as credenciais padrão (`username`: `sa`, `password`: vazio).
 
-## Endpoints REST Principais
+## Endpoints REST
 
-1. **Usuário**
-    - `POST /api/usuarios`: Cadastro de novos usuários.
-    - `POST /api/usuarios/login`: Autenticação de usuários.
+### Usuário
+- `POST /api/usuarios/registrar`: Cadastro de novos usuários.
+- `POST /api/usuarios/autenticar`: Autenticação de usuários.
+- `GET /api/usuarios/{id}`: Obter detalhes de um usuário específico.
+- `GET /api/usuarios`: Listar todos os usuários (apenas para fins administrativos).
+- `PUT /api/usuarios/{id}`: Atualizar informações de um usuário.
+- `DELETE /api/usuarios/{id}`: Deletar um usuário (opcional).
 
-2. **Consulta**
-    - `POST /api/consultas`: Agendamento de consultas.
-    - `GET /api/consultas/{id}`: Detalhes de uma consulta.
+### Consulta
+- `POST /api/consultas`: Agendamento de consultas.
+- `GET /api/consultas/{id}`: Detalhes de uma consulta.
 
-3. **Pontuação**
-    - `GET /api/pontuacao/{usuarioId}`: Consulta da pontuação acumulada.
-    - `POST /api/pontuacao/bonus`: Aplica pontos bônus após validação.
+### Pontuação
+- `GET /api/pontuacao/{usuarioId}`: Consulta da pontuação acumulada.
+- `POST /api/pontuacao/bonus`: Aplicar pontos bônus após validação.
 
-4. **Recompensas**
-    - `GET /api/recompensas`: Lista de recompensas disponíveis.
-    - `POST /api/recompensas/resgate`: Resgate de recompensas.
+### Recompensas
+- `GET /api/recompensas`: Lista de recompensas disponíveis.
+- `GET /api/recompensas/{id}`: Obter detalhes de uma recompensa específica.
+- `POST /api/recompensas/{id}/resgatar/usuario/{usuarioId}`: Resgatar uma recompensa para um usuário.
 
-## Estrutura de Camadas e Boas Práticas
+### Sinistros
+- `GET /api/sinistros/usuario/{usuarioId}`: Listar sinistros de um usuário.
+- `GET /api/sinistros/{id}`: Obter detalhes de um sinistro específico.
+- `POST /api/sinistros`: Registrar um novo sinistro.
 
-Este projeto utiliza uma arquitetura em camadas para promover a separação de responsabilidades e a modularidade do código.
+### Usuário Recompensas
+- `GET /api/usuarios/{usuarioId}/recompensas`: Listar recompensas resgatadas por um usuário.
+- `GET /api/usuarios/{usuarioId}/recompensas/{id}`: Obter detalhes de uma recompensa resgatada por ID.
 
-- **Camada de Controller**: Expondo endpoints e lidando com requisições HTTP.
-- **Camada de Serviço**: Contendo a lógica de negócios e validações.
-- **Camada de Repositório**: Acesso ao banco de dados e operações de CRUD com JPA.
+### Validação Checklist
+- `POST /api/validacoes-checklist/usuario/{usuarioId}/consulta/{consultaId}`: Validar checklist de um usuário para uma consulta.
+- `GET /api/validacoes-checklist/{id}`: Obter detalhes de uma validação de checklist.
+- `GET /api/validacoes-checklist/usuario/{usuarioId}`: Listar todas as validações de checklist de um usuário específico.
+- `GET /api/validacoes-checklist`: Listar todas as validações de checklist (geral).
+
+## Arquitetura RESTful com HATEOAS
+
+A aplicação implementa o nível 3 de maturidade REST, utilizando HATEOAS. Os controladores adicionam links relevantes a cada recurso, permitindo navegação estruturada pela API. Por exemplo, ao listar conquistas de um usuário, o recurso inclui links para detalhes específicos de cada conquista e links para outros endpoints relacionados.
+
+## Lombok: Uso Opcional
+
+Lombok foi considerado para reduzir a verbosidade do código, mas, devido a problemas na resolução de métodos ao rodar `mvn clean install`, a equipe optou por manter o projeto sem Lombok. Assim, getters, setters e construtores foram implementados manualmente para garantir estabilidade e compatibilidade do código.
+
+## Controle de Versão e Acesso
+
+Todo o
+
+código está versionado no GitHub e acessível aos professores, conforme solicitado nos requisitos.
+
+## Cronograma da Sprint 2 (14/10/2024 - 08/11/2024)
+
+### Semana 1 (14/10 - 18/10)
+**Planejamento e Alinhamento Inicial:**
+- **14/10 (Segunda-feira)**: Reunião inicial para alinhamento dos objetivos da sprint e definição das funcionalidades principais.
+- **15/10 (Terça-feira)**: Discussão sobre integração entre banco de dados e IA (Matheus e Luis). Configuração do ambiente de DevOps (Sabrina).
+
+**Atividades de Desenvolvimento:**
+- **16/10 (Quarta-feira)**: Configuração inicial do banco de dados e IA.
+- **17/10 (Quinta-feira)**: Configuração da pipeline de integração contínua (Sabrina).
+- **18/10 (Sexta-feira)**: Criação dos endpoints para o app mobile (Luis). Revisão de infraestrutura para escalabilidade no Azure (Sabrina).
+
+### Semana 2 (21/10 - 25/10)
+**Desenvolvimento e Integração:**
+- **21/10 (Segunda-feira)**: Desenvolvimento da lógica de IA (Matheus) e revisão de código (Sabrina).
+- **22/10 (Terça-feira)**: Integração da IA ao banco de dados (Luis) e automação de implantação (Sabrina).
+- **23/10 (Quarta-feira)**: Finalização do treinamento da IA e primeiros testes com dados reais.
+- **24/10 (Quinta-feira)**: Ajustes na arquitetura do banco e infraestrutura.
+- **25/10 (Sexta-feira)**: Testes de carga e stress.
+
+### Semana 3 (28/10 - 01/11)
+**Testes e Correções:**
+- **28/10 (Segunda-feira)**: Testes em ambiente de desenvolvimento e ajustes na IA.
+- **29/10 (Terça-feira)**: Testes das funcionalidades do aplicativo mobile.
+- **30/10 (Quarta-feira)**: Automatização do processo de validação dos diagnósticos por IA.
+- **31/10 (Quinta-feira)**: Testes finais de QA.
+- **01/11 (Sexta-feira)**: Revisão geral e preparação para entrega.
+
+### Semana 4 (04/11 - 08/11)
+**Entrega e Documentação:**
+- **04/11 (Segunda-feira)**: Documentação do banco de dados e endpoints (Luis).
+- **05/11 (Terça-feira)**: Revisão da documentação e conformidade para produção.
+- **06/11 (Quarta-feira)**: Reunião de validação dos objetivos da sprint.
+- **07/11 (Quinta-feira)**: Ajustes finais no DevOps e implantação.
+- **08/11 (Sexta-feira)**: Ajustes Necessários e entrega no portal da FIAP.
 
 ## Executando a Aplicação
 
@@ -177,3 +239,4 @@ Para executar a aplicação localmente, siga estes passos:
    ```
 
 4. A aplicação estará disponível em [http://localhost:8080](http://localhost:8080).
+
