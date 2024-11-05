@@ -1,12 +1,9 @@
 package model;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import java.util.Date;
 import java.util.List;
 
-
-@Data
 @Entity
 @Table(name = "usuario")
 public class Usuario {
@@ -38,40 +35,200 @@ public class Usuario {
 
     // Relacionamentos com outras entidades
 
-    // Relacionamento com Pontuacao
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pontuacao> pontuacoes;
 
-    // Relacionamento com Sinistro
     @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Sinistro> sinistros;
 
-    // Relacionamento com UsuarioRecompensa
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UsuarioRecompensa> usuarioRecompensas;
 
-    // Relacionamento com UsuarioNivel
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UsuarioNivel> usuarioNiveis;
 
-    // Relacionamento com UsuarioConquista
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UsuarioConquista> usuarioConquistas;
 
-    // Relacionamento com LogAtividade
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LogAtividade> logsAtividade;
 
-    // Relacionamento com LogFraude
     @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LogFraude> logsFraude;
 
-    // Relacionamento com HistoricoPontuacao
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<HistoricoPontuacao> historicoPontuacoes;
 
-    // Relacionamento com ValidacaoChecklist
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ValidacaoChecklist> validacoesChecklist;
 
+    // Getters e Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public Date getDataNascimento() {
+        return dataNascimento;
+    }
+
+    public void setDataNascimento(Date dataNascimento) {
+        this.dataNascimento = dataNascimento;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public List<Pontuacao> getPontuacoes() {
+        return pontuacoes;
+    }
+
+    public void setPontuacoes(List<Pontuacao> pontuacoes) {
+        this.pontuacoes = pontuacoes;
+    }
+
+    public List<Sinistro> getSinistros() {
+        return sinistros;
+    }
+
+    public void setSinistros(List<Sinistro> sinistros) {
+        this.sinistros = sinistros;
+    }
+
+    public List<UsuarioRecompensa> getUsuarioRecompensas() {
+        return usuarioRecompensas;
+    }
+
+    public void setUsuarioRecompensas(List<UsuarioRecompensa> usuarioRecompensas) {
+        this.usuarioRecompensas = usuarioRecompensas;
+    }
+
+    public List<UsuarioNivel> getUsuarioNiveis() {
+        return usuarioNiveis;
+    }
+
+    public void setUsuarioNiveis(List<UsuarioNivel> usuarioNiveis) {
+        this.usuarioNiveis = usuarioNiveis;
+    }
+
+    public List<UsuarioConquista> getUsuarioConquistas() {
+        return usuarioConquistas;
+    }
+
+    public void setUsuarioConquistas(List<UsuarioConquista> usuarioConquistas) {
+        this.usuarioConquistas = usuarioConquistas;
+    }
+
+    public List<LogAtividade> getLogsAtividade() {
+        return logsAtividade;
+    }
+
+    public void setLogsAtividade(List<LogAtividade> logsAtividade) {
+        this.logsAtividade = logsAtividade;
+    }
+
+    public List<LogFraude> getLogsFraude() {
+        return logsFraude;
+    }
+
+    public void setLogsFraude(List<LogFraude> logsFraude) {
+        this.logsFraude = logsFraude;
+    }
+
+    public List<HistoricoPontuacao> getHistoricoPontuacoes() {
+        return historicoPontuacoes;
+    }
+
+    public void setHistoricoPontuacoes(List<HistoricoPontuacao> historicoPontuacoes) {
+        this.historicoPontuacoes = historicoPontuacoes;
+    }
+
+    public List<ValidacaoChecklist> getValidacoesChecklist() {
+        return validacoesChecklist;
+    }
+
+    public void setValidacoesChecklist(List<ValidacaoChecklist> validacoesChecklist) {
+        this.validacoesChecklist = validacoesChecklist;
+    }
+
+    // Método equals baseado no campo 'id'
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Usuario usuario = (Usuario) o;
+
+        return id != null ? id.equals(usuario.id) : usuario.id == null;
+    }
+
+    // Método hashCode baseado no campo 'id'
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+
+    // Método toString
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", email='" + email + '\'' +
+                ", senha='" + senha + '\'' +
+                ", dataNascimento=" + dataNascimento +
+                ", cpf='" + cpf + '\'' +
+                ", endereco='" + endereco + '\'' +
+                ", telefone='" + telefone + '\'' +
+                '}';
+    }
 }
+

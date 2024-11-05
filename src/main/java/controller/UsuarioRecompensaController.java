@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import service.UsuarioRecompensaService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
@@ -23,12 +25,16 @@ public class UsuarioRecompensaController {
 
     // Listar recompensas resgatadas pelo usuário
     @GetMapping
-    public ResponseEntity<CollectionModel<UsuarioRecompensa>> listarRecompensasResgatadas(@PathVariable Long usuarioId) {
+    public ResponseEntity<CollectionModel<EntityModel<UsuarioRecompensa>>> listarRecompensasResgatadas(@PathVariable Long usuarioId) {
         List<UsuarioRecompensa> recompensas = usuarioRecompensaService.listarRecompensasPorUsuario(usuarioId);
-        recompensas.forEach(ur -> ur.add(linkTo(methodOn(UsuarioRecompensaController.class)
-                .obterRecompensaResgatada(usuarioId, ur.getId())).withSelfRel()));
 
-        CollectionModel<UsuarioRecompensa> resource = CollectionModel.of(recompensas,
+        List<EntityModel<UsuarioRecompensa>> recompensasModel = recompensas.stream()
+                .map(recompensa -> EntityModel.of(recompensa,
+                        linkTo(methodOn(UsuarioRecompensaController.class).obterRecompensaResgatada(usuarioId, recompensa.getId())).withSelfRel(),
+                        linkTo(methodOn(UsuarioRecompensaController.class).listarRecompensasResgatadas(usuarioId)).withRel("recompensas-usuario")))
+                .collect(Collectors.toList());
+
+        CollectionModel<EntityModel<UsuarioRecompensa>> resource = CollectionModel.of(recompensasModel,
                 linkTo(methodOn(UsuarioRecompensaController.class).listarRecompensasResgatadas(usuarioId)).withSelfRel());
 
         return ResponseEntity.ok(resource);
@@ -40,7 +46,7 @@ public class UsuarioRecompensaController {
         UsuarioRecompensa recompensa = usuarioRecompensaService.obterRecompensaResgatadaPorId(id);
         EntityModel<UsuarioRecompensa> resource = EntityModel.of(recompensa,
                 linkTo(methodOn(UsuarioRecompensaController.class).obterRecompensaResgatada(usuarioId, id)).withSelfRel(),
-                linkTo(methodOn(UsuarioRecompensaController.class).listarRecompensasResgatadas(usuarioId)).withRel("recompensas"));
+                linkTo(methodOn(UsuarioRecompensaController.class).listarRecompensasResgatadas(usuarioId)).withRel("recompensas-usuario"));
 
         return ResponseEntity.ok(resource);
     }

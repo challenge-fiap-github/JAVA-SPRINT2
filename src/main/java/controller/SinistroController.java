@@ -26,23 +26,27 @@ public class SinistroController {
         List<Sinistro> sinistros = sinistroService.listarSinistrosPorUsuario(usuarioId);
 
         List<EntityModel<Sinistro>> sinistrosModel = sinistros.stream()
-                .map(s -> EntityModel.of(s,
-                        linkTo(methodOn(SinistroController.class).obterSinistro(s.getId())).withSelfRel()))
+                .map(sinistro -> EntityModel.of(sinistro,
+                        linkTo(methodOn(SinistroController.class).obterSinistro(sinistro.getId())).withSelfRel(),
+                        linkTo(methodOn(SinistroController.class).listarSinistrosPorUsuario(usuarioId)).withRel("sinistros-usuario"),
+                        linkTo(methodOn(SinistroController.class).registrarSinistro(sinistro)).withRel("registrar-sinistro")))
                 .collect(Collectors.toList());
 
         CollectionModel<EntityModel<Sinistro>> resource = CollectionModel.of(sinistrosModel,
-                linkTo(methodOn(SinistroController.class).listarSinistrosPorUsuario(usuarioId)).withSelfRel());
+                linkTo(methodOn(SinistroController.class).listarSinistrosPorUsuario(usuarioId)).withSelfRel(),
+                linkTo(methodOn(SinistroController.class).registrarSinistro(null)).withRel("registrar-sinistro"));
 
         return ResponseEntity.ok(resource);
     }
-
 
     // Obter sinistro por ID
     @GetMapping("/{id}")
     public ResponseEntity<EntityModel<Sinistro>> obterSinistro(@PathVariable Long id) {
         Sinistro sinistro = sinistroService.obterSinistroPorId(id);
         EntityModel<Sinistro> resource = EntityModel.of(sinistro,
-                linkTo(methodOn(SinistroController.class).obterSinistro(id)).withSelfRel());
+                linkTo(methodOn(SinistroController.class).obterSinistro(id)).withSelfRel(),
+                linkTo(methodOn(SinistroController.class).listarSinistrosPorUsuario(sinistro.getUsuarioId())).withRel("sinistros-usuario"),
+                linkTo(methodOn(SinistroController.class).registrarSinistro(sinistro)).withRel("registrar-sinistro"));
 
         return ResponseEntity.ok(resource);
     }
@@ -52,7 +56,8 @@ public class SinistroController {
     public ResponseEntity<EntityModel<Sinistro>> registrarSinistro(@RequestBody Sinistro sinistro) {
         Sinistro novoSinistro = sinistroService.registrarSinistro(sinistro);
         EntityModel<Sinistro> resource = EntityModel.of(novoSinistro,
-                linkTo(methodOn(SinistroController.class).obterSinistro(novoSinistro.getId())).withSelfRel());
+                linkTo(methodOn(SinistroController.class).obterSinistro(novoSinistro.getId())).withSelfRel(),
+                linkTo(methodOn(SinistroController.class).listarSinistrosPorUsuario(novoSinistro.getUsuarioId())).withRel("sinistros-usuario"));
 
         return ResponseEntity.created(linkTo(methodOn(SinistroController.class).obterSinistro(novoSinistro.getId())).toUri()).body(resource);
     }

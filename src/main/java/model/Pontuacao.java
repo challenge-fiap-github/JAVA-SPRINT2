@@ -1,43 +1,78 @@
 package model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-
 import java.util.Date;
 
-@Data
 @Entity
-@Table(name = "pontuacao")
 public class Pontuacao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Relacionamento com Usuario
-    @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
-
-    @Column(nullable = false)
     private Integer pontos;
-
-    @Column(nullable = false)
     private Integer pontosAcumulados;
+    private String tipo;
 
     @Temporal(TemporalType.DATE)
-    @Column(nullable = false)
     private Date dataRegistro;
 
-    @Temporal(TemporalType.DATE)
-    private Date cicloInicial;
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
 
-    @Temporal(TemporalType.DATE)
-    private Date cicloFinal;
+    // Getters e setters para os campos
 
-    @Column(nullable = false, length = 20)
-    private String tipo; // 'Consulta Preventiva' ou 'Bônus'
+    public Long getId() {
+        return id;
+    }
 
-    @Column(length = 1)
-    private String validacaoHabitos; // 'S' ou 'N'
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Integer getPontos() {
+        return pontos;
+    }
+
+    public void setPontos(Integer pontos) {
+        this.pontos = pontos;
+    }
+
+    public Integer getPontosAcumulados() {
+        return pontosAcumulados;
+    }
+
+    public void setPontosAcumulados(Integer pontosAcumulados) {
+        this.pontosAcumulados = pontosAcumulados;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public Date getDataRegistro() {
+        return dataRegistro;
+    }
+
+    public void setDataRegistro(Date dataRegistro) {
+        this.dataRegistro = dataRegistro;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    // Método auxiliar para obter o ID do usuário
+    public Long getUsuarioId() {
+        return this.usuario != null ? this.usuario.getId() : null;
+    }
 }

@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface LogFraudeRepository extends JpaRepository<LogFraude, Long> {
-    List<LogFraude> findByPacienteId(Long pacienteId);
+    List<LogFraude> findByPaciente_Id(Long pacienteId); // Correção do nome do campo para relacionamento
 }

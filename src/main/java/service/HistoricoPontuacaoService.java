@@ -23,4 +23,9 @@ public class HistoricoPontuacaoService {
         return historicoPontuacaoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Histórico de pontuação não encontrado."));
     }
+
+    // Listar histórico geral
+    public List<HistoricoPontuacao> listarHistoricoGeral() {
+        return historicoPontuacaoRepository.findAll();
+    }
 }

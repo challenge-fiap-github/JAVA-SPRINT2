@@ -26,8 +26,10 @@ public class RecompensaController {
         List<Recompensa> recompensas = recompensaService.listarRecompensasDisponiveis();
 
         List<EntityModel<Recompensa>> recompensasModel = recompensas.stream()
-                .map(r -> EntityModel.of(r,
-                        linkTo(methodOn(RecompensaController.class).obterRecompensa(r.getId())).withSelfRel()))
+                .map(recompensa -> EntityModel.of(recompensa,
+                        linkTo(methodOn(RecompensaController.class).obterRecompensa(recompensa.getId())).withSelfRel(),
+                        linkTo(methodOn(RecompensaController.class).listarRecompensasDisponiveis()).withRel("recompensas"),
+                        linkTo(methodOn(RecompensaController.class).resgatarRecompensa(recompensa.getId(), null)).withRel("resgatar-recompensa")))
                 .collect(Collectors.toList());
 
         CollectionModel<EntityModel<Recompensa>> resource = CollectionModel.of(recompensasModel,
@@ -42,7 +44,8 @@ public class RecompensaController {
         Recompensa recompensa = recompensaService.obterRecompensaPorId(id);
         EntityModel<Recompensa> resource = EntityModel.of(recompensa,
                 linkTo(methodOn(RecompensaController.class).obterRecompensa(id)).withSelfRel(),
-                linkTo(methodOn(RecompensaController.class).listarRecompensasDisponiveis()).withRel("recompensas"));
+                linkTo(methodOn(RecompensaController.class).listarRecompensasDisponiveis()).withRel("recompensas"),
+                linkTo(methodOn(RecompensaController.class).resgatarRecompensa(id, null)).withRel("resgatar-recompensa"));
 
         return ResponseEntity.ok(resource);
     }
@@ -52,7 +55,8 @@ public class RecompensaController {
     public ResponseEntity<EntityModel<Recompensa>> resgatarRecompensa(@PathVariable Long id, @PathVariable Long usuarioId) {
         Recompensa recompensaResgatada = recompensaService.resgatarRecompensa(usuarioId, id);
         EntityModel<Recompensa> resource = EntityModel.of(recompensaResgatada,
-                linkTo(methodOn(RecompensaController.class).obterRecompensa(id)).withSelfRel());
+                linkTo(methodOn(RecompensaController.class).obterRecompensa(id)).withSelfRel(),
+                linkTo(methodOn(RecompensaController.class).listarRecompensasDisponiveis()).withRel("recompensas"));
 
         return ResponseEntity.ok(resource);
     }

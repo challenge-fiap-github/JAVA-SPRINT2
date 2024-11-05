@@ -26,9 +26,10 @@ public class PontuacaoController {
         List<Pontuacao> pontuacoes = pontuacaoService.listarPontuacoesPorUsuario(usuarioId);
 
         List<EntityModel<Pontuacao>> pontuacoesModel = pontuacoes.stream()
-                .map(p -> EntityModel.of(p,
-                        linkTo(methodOn(PontuacaoController.class).obterPontuacao(p.getId())).withSelfRel(),
-                        linkTo(methodOn(PontuacaoController.class).listarPontuacoesPorUsuario(usuarioId)).withRel("pontuacoes")))
+                .map(pontuacao -> EntityModel.of(pontuacao,
+                        linkTo(methodOn(PontuacaoController.class).obterPontuacao(pontuacao.getId())).withSelfRel(),
+                        linkTo(methodOn(PontuacaoController.class).listarPontuacoesPorUsuario(usuarioId)).withRel("pontuacoes-usuario"),
+                        linkTo(methodOn(PontuacaoController.class).registrarPontuacao(usuarioId, pontuacao)).withRel("registrar-pontuacao")))
                 .collect(Collectors.toList());
 
         CollectionModel<EntityModel<Pontuacao>> resource = CollectionModel.of(pontuacoesModel,
@@ -42,7 +43,8 @@ public class PontuacaoController {
     public ResponseEntity<EntityModel<Pontuacao>> obterPontuacao(@PathVariable Long id) {
         Pontuacao pontuacao = pontuacaoService.obterPontuacaoPorId(id);
         EntityModel<Pontuacao> resource = EntityModel.of(pontuacao,
-                linkTo(methodOn(PontuacaoController.class).obterPontuacao(id)).withSelfRel());
+                linkTo(methodOn(PontuacaoController.class).obterPontuacao(id)).withSelfRel(),
+                linkTo(methodOn(PontuacaoController.class).listarPontuacoesPorUsuario(pontuacao.getUsuarioId())).withRel("pontuacoes-usuario"));
 
         return ResponseEntity.ok(resource);
     }
@@ -53,7 +55,7 @@ public class PontuacaoController {
         Pontuacao novaPontuacao = pontuacaoService.registrarPontuacao(usuarioId, pontuacao);
         EntityModel<Pontuacao> resource = EntityModel.of(novaPontuacao,
                 linkTo(methodOn(PontuacaoController.class).obterPontuacao(novaPontuacao.getId())).withSelfRel(),
-                linkTo(methodOn(PontuacaoController.class).listarPontuacoesPorUsuario(usuarioId)).withRel("pontuacoes"));
+                linkTo(methodOn(PontuacaoController.class).listarPontuacoesPorUsuario(usuarioId)).withRel("pontuacoes-usuario"));
 
         return ResponseEntity.created(linkTo(methodOn(PontuacaoController.class).obterPontuacao(novaPontuacao.getId())).toUri()).body(resource);
     }

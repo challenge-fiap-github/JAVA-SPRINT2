@@ -29,8 +29,9 @@ public class NivelController {
         List<Nivel> niveis = nivelService.listarNiveis();
 
         List<EntityModel<Nivel>> niveisModel = niveis.stream()
-                .map(n -> EntityModel.of(n,
-                        linkTo(methodOn(NivelController.class).obterNivel(n.getId())).withSelfRel()))
+                .map(nivel -> EntityModel.of(nivel,
+                        linkTo(methodOn(NivelController.class).obterNivel(nivel.getId())).withSelfRel(),
+                        linkTo(methodOn(NivelController.class).listarNiveis()).withRel("niveis")))
                 .collect(Collectors.toList());
 
         CollectionModel<EntityModel<Nivel>> resource = CollectionModel.of(niveisModel,
@@ -38,7 +39,6 @@ public class NivelController {
 
         return ResponseEntity.ok(resource);
     }
-
 
     // Obter nível por ID
     @GetMapping("/{id}")

@@ -30,11 +30,13 @@ public class ConquistaController {
 
         List<EntityModel<Conquista>> conquistasModel = conquistas.stream()
                 .map(c -> EntityModel.of(c,
-                        linkTo(methodOn(ConquistaController.class).obterConquista(c.getId())).withSelfRel()))
+                        linkTo(methodOn(ConquistaController.class).obterConquista(c.getId())).withSelfRel(),
+                        linkTo(methodOn(ConquistaController.class).listarConquistas()).withRel("conquistas")))
                 .collect(Collectors.toList());
 
         CollectionModel<EntityModel<Conquista>> resource = CollectionModel.of(conquistasModel,
-                linkTo(methodOn(ConquistaController.class).listarConquistas()).withSelfRel());
+                linkTo(methodOn(ConquistaController.class).listarConquistas()).withSelfRel(),
+                linkTo(methodOn(ConquistaController.class).listarConquistasPorUsuario(1L)).withRel("conquistas-usuario"));
 
         return ResponseEntity.ok(resource);
     }
@@ -45,7 +47,8 @@ public class ConquistaController {
         Conquista conquista = conquistaService.obterConquistaPorId(id);
         EntityModel<Conquista> resource = EntityModel.of(conquista,
                 linkTo(methodOn(ConquistaController.class).obterConquista(id)).withSelfRel(),
-                linkTo(methodOn(ConquistaController.class).listarConquistas()).withRel("conquistas"));
+                linkTo(methodOn(ConquistaController.class).listarConquistas()).withRel("conquistas"),
+                linkTo(methodOn(ConquistaController.class).listarConquistasPorUsuario(1L)).withRel("conquistas-usuario"));
 
         return ResponseEntity.ok(resource);
     }
@@ -57,11 +60,13 @@ public class ConquistaController {
 
         List<EntityModel<Conquista>> conquistasModel = conquistas.stream()
                 .map(c -> EntityModel.of(c,
-                        linkTo(methodOn(ConquistaController.class).obterConquista(c.getId())).withSelfRel()))
+                        linkTo(methodOn(ConquistaController.class).obterConquista(c.getId())).withSelfRel(),
+                        linkTo(methodOn(ConquistaController.class).listarConquistas()).withRel("conquistas")))
                 .collect(Collectors.toList());
 
         CollectionModel<EntityModel<Conquista>> resource = CollectionModel.of(conquistasModel,
-                linkTo(methodOn(ConquistaController.class).listarConquistasPorUsuario(usuarioId)).withSelfRel());
+                linkTo(methodOn(ConquistaController.class).listarConquistasPorUsuario(usuarioId)).withSelfRel(),
+                linkTo(methodOn(ConquistaController.class).listarConquistas()).withRel("todas-conquistas"));
 
         return ResponseEntity.ok(resource);
     }

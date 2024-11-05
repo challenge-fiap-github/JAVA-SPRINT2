@@ -1,12 +1,8 @@
 package model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import org.springframework.hateoas.Link;
+import java.sql.Timestamp;
 
-import java.security.Timestamp;
-
-@Data
 @Entity
 @Table(name = "log_atividade")
 public class LogAtividade {
@@ -31,4 +27,65 @@ public class LogAtividade {
         dataHora = new Timestamp(System.currentTimeMillis());
     }
 
+    // Getters e Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public Timestamp getDataHora() {
+        return dataHora;
+    }
+
+    public void setDataHora(Timestamp dataHora) {
+        this.dataHora = dataHora;
+    }
+
+    // Método equals baseado no campo 'id'
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        LogAtividade that = (LogAtividade) o;
+
+        return id != null ? id.equals(that.id) : that.id == null;
+    }
+
+    // Método hashCode baseado no campo 'id'
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+
+    // Método toString
+    @Override
+    public String toString() {
+        return "LogAtividade{" +
+                "id=" + id +
+                ", usuario=" + (usuario != null ? usuario.getId() : "null") +
+                ", descricao='" + descricao + '\'' +
+                ", dataHora=" + dataHora +
+                '}';
+    }
 }
+

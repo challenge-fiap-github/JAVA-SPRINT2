@@ -30,22 +30,41 @@ public class HistoricoPontuacaoController {
 
         List<EntityModel<HistoricoPontuacao>> historicosModel = historicos.stream()
                 .map(h -> EntityModel.of(h,
-                        linkTo(methodOn(HistoricoPontuacaoController.class).obterHistorico(h.getId())).withSelfRel()))
+                        linkTo(methodOn(HistoricoPontuacaoController.class).obterHistorico(h.getId())).withSelfRel(),
+                        linkTo(methodOn(HistoricoPontuacaoController.class).listarHistoricoPorUsuario(usuarioId)).withRel("historico-usuario")))
                 .collect(Collectors.toList());
 
         CollectionModel<EntityModel<HistoricoPontuacao>> resource = CollectionModel.of(historicosModel,
-                linkTo(methodOn(HistoricoPontuacaoController.class).listarHistoricoPorUsuario(usuarioId)).withSelfRel());
+                linkTo(methodOn(HistoricoPontuacaoController.class).listarHistoricoPorUsuario(usuarioId)).withSelfRel(),
+                linkTo(methodOn(HistoricoPontuacaoController.class).listarHistoricoGeral()).withRel("todos-historicos"));
 
         return ResponseEntity.ok(resource);
     }
-
 
     // Obter histórico de pontuação por ID
     @GetMapping("/{id}")
     public ResponseEntity<EntityModel<HistoricoPontuacao>> obterHistorico(@PathVariable Long id) {
         HistoricoPontuacao historico = historicoPontuacaoService.obterHistoricoPorId(id);
         EntityModel<HistoricoPontuacao> resource = EntityModel.of(historico,
-                linkTo(methodOn(HistoricoPontuacaoController.class).obterHistorico(id)).withSelfRel());
+                linkTo(methodOn(HistoricoPontuacaoController.class).obterHistorico(id)).withSelfRel(),
+                linkTo(methodOn(HistoricoPontuacaoController.class).listarHistoricoGeral()).withRel("todos-historicos"));
+
+        return ResponseEntity.ok(resource);
+    }
+
+    // Listar histórico de pontuação geral
+    @GetMapping
+    public ResponseEntity<CollectionModel<EntityModel<HistoricoPontuacao>>> listarHistoricoGeral() {
+        List<HistoricoPontuacao> historicos = historicoPontuacaoService.listarHistoricoGeral();
+
+        List<EntityModel<HistoricoPontuacao>> historicosModel = historicos.stream()
+                .map(h -> EntityModel.of(h,
+                        linkTo(methodOn(HistoricoPontuacaoController.class).obterHistorico(h.getId())).withSelfRel(),
+                        linkTo(methodOn(HistoricoPontuacaoController.class).listarHistoricoGeral()).withRel("todos-historicos")))
+                .collect(Collectors.toList());
+
+        CollectionModel<EntityModel<HistoricoPontuacao>> resource = CollectionModel.of(historicosModel,
+                linkTo(methodOn(HistoricoPontuacaoController.class).listarHistoricoGeral()).withSelfRel());
 
         return ResponseEntity.ok(resource);
     }

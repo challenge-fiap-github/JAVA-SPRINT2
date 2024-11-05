@@ -2,12 +2,14 @@ package controller;
 
 import model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.UsuarioService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
@@ -53,9 +55,19 @@ public class UsuarioController {
 
     // Listar todos os usuários (apenas para fins administrativos)
     @GetMapping
-    public ResponseEntity<List<Usuario>> listarUsuarios() {
+    public ResponseEntity<CollectionModel<EntityModel<Usuario>>> listarUsuarios() {
         List<Usuario> usuarios = usuarioService.listarTodosUsuarios();
-        return ResponseEntity.ok(usuarios);
+
+        List<EntityModel<Usuario>> usuarioModels = usuarios.stream()
+                .map(usuario -> EntityModel.of(usuario,
+                        linkTo(methodOn(UsuarioController.class).obterUsuario(usuario.getId())).withSelfRel(),
+                        linkTo(methodOn(UsuarioController.class).listarUsuarios()).withRel("usuarios")))
+                .collect(Collectors.toList());
+
+        CollectionModel<EntityModel<Usuario>> resource = CollectionModel.of(usuarioModels,
+                linkTo(methodOn(UsuarioController.class).listarUsuarios()).withSelfRel());
+
+        return ResponseEntity.ok(resource);
     }
 
     // Atualizar informações do usuário
