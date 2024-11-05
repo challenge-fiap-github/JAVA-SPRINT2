@@ -5,6 +5,10 @@
 
 Este projeto é uma aplicação Spring Boot desenvolvida para a **OdontoVision** como parte do Challenge Odontoprev. O objetivo principal é reduzir a ocorrência de sinistros em atendimentos odontológicos por meio de incentivos preventivos e monitoramento proativo, utilizando IA para identificar possíveis fraudes.
 
+## Evolução com base na Sprint 1 de Java Advanced
+
+Nessa Sprint alteramos as regras de negócio e unificamos o banco de dados, por tanto foi necessário refazer o código java.
+
 ## Funcionalidades
 
 - **Gamificação**: Incentivo ao paciente para consultas preventivas e bons hábitos de higiene bucal, com sistema de pontuação e recompensas.
@@ -16,7 +20,7 @@ Este projeto é uma aplicação Spring Boot desenvolvida para a **OdontoVision**
 
 - **Spring Boot 3.3.5**: Framework Java para o backend.
 - **Banco de Dados**: Oracle (produção) e H2 (testes).
-- **Segurança**: Spring Security para autenticação e autorização.
+- **Segurança**: Spring Security para autenticação e autorização. (Decidimos por deixar esse ponto para a Sprint 3)
 - **API RESTful**: Seguindo boas práticas e nível 3 de maturidade REST (HATEOAS).
 - **JPA/Hibernate**: Persistência e mapeamento objeto-relacional.
 - **IA**: Random Forest para análise de padrões e monitoramento de fraudes.
