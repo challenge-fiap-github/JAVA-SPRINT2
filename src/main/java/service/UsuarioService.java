@@ -4,7 +4,6 @@ import model.Usuario;
 import repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
@@ -14,10 +13,6 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    // Se estiver usando codificação de senha
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     // Registrar novo usuário
     public Usuario registrarUsuario(Usuario usuario) {
         // Verificar se o email já está em uso
@@ -25,8 +20,8 @@ public class UsuarioService {
             throw new RuntimeException("Email já está em uso.");
         }
 
-        // Codificar a senha
-        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+        // Salvar a senha sem codificação (apenas para testes)
+        usuario.setSenha(usuario.getSenha());
 
         return usuarioRepository.save(usuario);
     }
@@ -38,8 +33,8 @@ public class UsuarioService {
             throw new RuntimeException("Usuário não encontrado.");
         }
 
-        // Verificar a senha
-        if (!passwordEncoder.matches(senha, usuario.getSenha())) {
+        // Comparar a senha diretamente (sem codificação)
+        if (!senha.equals(usuario.getSenha())) {
             throw new RuntimeException("Senha inválida.");
         }
 
@@ -66,9 +61,9 @@ public class UsuarioService {
         usuarioExistente.setEndereco(usuarioAtualizado.getEndereco());
         usuarioExistente.setTelefone(usuarioAtualizado.getTelefone());
         usuarioExistente.setDataNascimento(usuarioAtualizado.getDataNascimento());
-        // Se quiser atualizar a senha
+        // Atualizar a senha diretamente (apenas para testes)
         if (usuarioAtualizado.getSenha() != null && !usuarioAtualizado.getSenha().isEmpty()) {
-            usuarioExistente.setSenha(passwordEncoder.encode(usuarioAtualizado.getSenha()));
+            usuarioExistente.setSenha(usuarioAtualizado.getSenha());
         }
 
         return usuarioRepository.save(usuarioExistente);
