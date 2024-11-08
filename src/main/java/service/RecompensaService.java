@@ -1,5 +1,8 @@
 package service;
 
+import exception.UsuarioNotFoundException;
+import exception.InsufficientPointsException;
+import exception.RecompensaUnavailableException;
 import model.Recompensa;
 import model.Usuario;
 import model.UsuarioRecompensa;
@@ -35,19 +38,19 @@ public class RecompensaService {
     // Obter recompensa por ID
     public Recompensa obterRecompensaPorId(Long id) {
         return recompensaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Recompensa não encontrada."));
+                .orElseThrow(() -> new RecompensaNotFoundException("Recompensa com ID " + id + " não encontrada."));
     }
 
     // Resgatar recompensa
     public Recompensa resgatarRecompensa(Long usuarioId, Long recompensaId) {
         Usuario usuario = usuarioRepository.findById(usuarioId)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+                .orElseThrow(() -> new UsuarioNotFoundException("Usuário com ID " + usuarioId + " não encontrado."));
         Recompensa recompensa = obterRecompensaPorId(recompensaId);
 
         // Verificar se o usuário tem pontos suficientes
         Integer pontosTotais = pontuacaoService.calcularPontosTotais(usuarioId);
         if (pontosTotais < recompensa.getPontosNecessarios()) {
-            throw new RuntimeException("Pontos insuficientes para resgatar a recompensa.");
+            throw new InsufficientPointsException("Pontos insuficientes para resgatar a recompensa.");
         }
 
         // Diminuir a quantidade disponível, se aplicável
@@ -55,7 +58,7 @@ public class RecompensaService {
             recompensa.setQuantidadeDisponivel(recompensa.getQuantidadeDisponivel() - 1);
             recompensaRepository.save(recompensa);
         } else if (recompensa.getQuantidadeDisponivel() != null && recompensa.getQuantidadeDisponivel() <= 0) {
-            throw new RuntimeException("Recompensa indisponível.");
+            throw new RecompensaUnavailableException("Recompensa indisponível.");
         }
 
         // Registrar o resgate
@@ -65,7 +68,7 @@ public class RecompensaService {
         usuarioRecompensa.setDataResgate(new Date());
         usuarioRecompensaRepository.save(usuarioRecompensa);
 
-        // Atualizar os pontos do usuário (se necessário)
+        // Atualizar os pontos do usuário
         pontuacaoService.deduzirPontos(usuarioId, recompensa.getPontosNecessarios());
 
         return recompensa;

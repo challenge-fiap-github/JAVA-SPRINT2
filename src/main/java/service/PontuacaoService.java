@@ -1,5 +1,7 @@
 package service;
 
+import exception.PontuacaoNotFoundException;
+import exception.UsuarioNotFoundException;
 import model.Pontuacao;
 import model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +28,13 @@ public class PontuacaoService {
     // Obter pontuação por ID
     public Pontuacao obterPontuacaoPorId(Long id) {
         return pontuacaoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pontuação não encontrada."));
+                .orElseThrow(() -> new PontuacaoNotFoundException("Pontuação com ID " + id + " não encontrada."));
     }
 
     // Registrar nova pontuação
     public Pontuacao registrarPontuacao(Long usuarioId, Pontuacao pontuacao) {
         Usuario usuario = usuarioRepository.findById(usuarioId)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+                .orElseThrow(() -> new UsuarioNotFoundException("Usuário com ID " + usuarioId + " não encontrado."));
 
         pontuacao.setUsuario(usuario);
         pontuacao.setDataRegistro(new java.util.Date());
@@ -43,6 +45,7 @@ public class PontuacaoService {
 
         return pontuacaoRepository.save(pontuacao);
     }
+
     // Calcular pontos totais do usuário
     public Integer calcularPontosTotais(Long usuarioId) {
         Integer pontosAcumulados = pontuacaoRepository.sumPontosByUsuarioId(usuarioId);
@@ -52,8 +55,11 @@ public class PontuacaoService {
 
     // Deduzir pontos após resgate de recompensa
     public void deduzirPontos(Long usuarioId, Integer pontos) {
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new UsuarioNotFoundException("Usuário com ID " + usuarioId + " não encontrado."));
+
         Pontuacao pontuacaoDeduzida = new Pontuacao();
-        pontuacaoDeduzida.setUsuario(usuarioRepository.findById(usuarioId).orElseThrow(() -> new RuntimeException("Usuário não encontrado.")));
+        pontuacaoDeduzida.setUsuario(usuario);
         pontuacaoDeduzida.setPontos(-pontos);
         pontuacaoDeduzida.setTipo("Resgate de Recompensa");
         pontuacaoDeduzida.setDataRegistro(new java.util.Date());

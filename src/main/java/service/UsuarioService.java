@@ -1,5 +1,7 @@
 package service;
 
+import exception.EmailAlreadyInUseException;
+import exception.UsuarioNotFoundException;
 import model.Usuario;
 import repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,7 @@ public class UsuarioService {
     public Usuario registrarUsuario(Usuario usuario) {
         // Verificar se o email já está em uso
         if (usuarioRepository.findByEmail(usuario.getEmail()) != null) {
-            throw new RuntimeException("Email já está em uso.");
+            throw new EmailAlreadyInUseException("Email " + usuario.getEmail() + " já está em uso.");
         }
 
         // Salvar a senha sem codificação (apenas para testes)
@@ -30,12 +32,12 @@ public class UsuarioService {
     public Usuario autenticarUsuario(String email, String senha) {
         Usuario usuario = usuarioRepository.findByEmail(email);
         if (usuario == null) {
-            throw new RuntimeException("Usuário não encontrado.");
+            throw new UsuarioNotFoundException("Usuário com email " + email + " não encontrado.");
         }
 
         // Comparar a senha diretamente (sem codificação)
         if (!senha.equals(usuario.getSenha())) {
-            throw new RuntimeException("Senha inválida.");
+            throw new IllegalArgumentException("Senha inválida.");
         }
 
         return usuario;
@@ -44,7 +46,7 @@ public class UsuarioService {
     // Obter usuário por ID
     public Usuario obterUsuarioPorId(Long id) {
         return usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+                .orElseThrow(() -> new UsuarioNotFoundException("Usuário com ID " + id + " não encontrado."));
     }
 
     // Listar todos os usuários
@@ -61,6 +63,7 @@ public class UsuarioService {
         usuarioExistente.setEndereco(usuarioAtualizado.getEndereco());
         usuarioExistente.setTelefone(usuarioAtualizado.getTelefone());
         usuarioExistente.setDataNascimento(usuarioAtualizado.getDataNascimento());
+
         // Atualizar a senha diretamente (apenas para testes)
         if (usuarioAtualizado.getSenha() != null && !usuarioAtualizado.getSenha().isEmpty()) {
             usuarioExistente.setSenha(usuarioAtualizado.getSenha());
@@ -71,6 +74,9 @@ public class UsuarioService {
 
     // Deletar usuário
     public void deletarUsuario(Long id) {
+        if (!usuarioRepository.existsById(id)) {
+            throw new UsuarioNotFoundException("Usuário com ID " + id + " não encontrado.");
+        }
         usuarioRepository.deleteById(id);
     }
 }
