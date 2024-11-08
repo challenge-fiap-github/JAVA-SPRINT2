@@ -16,7 +16,7 @@ public class ValidacaoChecklist {
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    // Como Consulta está em outra tecnologia, usamos o ID
+    // Referência ao ID da Consulta, pois está em outra tecnologia
     @Column(name = "consulta_id", nullable = false)
     private Long consultaId;
 
@@ -28,7 +28,7 @@ public class ValidacaoChecklist {
 
     private Integer pontosBonus;
 
-    // Método para definir a data de validação antes de persistir
+    // Define a data de validação antes de persistir
     @PrePersist
     public void prePersist() {
         this.dataValidacao = new Date();

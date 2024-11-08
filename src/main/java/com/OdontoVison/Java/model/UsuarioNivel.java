@@ -12,12 +12,12 @@ public class UsuarioNivel {
 
     @ManyToOne
     @MapsId("usuarioId")
-    @JoinColumn(name = "usuario_id")
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
     @ManyToOne
     @MapsId("nivelId")
-    @JoinColumn(name = "nivel_id")
+    @JoinColumn(name = "nivel_id", nullable = false)
     private Nivel nivel;
 
     @Column(nullable = false)
@@ -28,6 +28,11 @@ public class UsuarioNivel {
 
     @PrePersist
     public void prePersist() {
+        dataUltimaAtualizacao = new Date();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
         dataUltimaAtualizacao = new Date();
     }
 
@@ -101,4 +106,3 @@ public class UsuarioNivel {
                 '}';
     }
 }
-

@@ -12,12 +12,12 @@ public class UsuarioConquista {
 
     @ManyToOne
     @MapsId("usuarioId")
-    @JoinColumn(name = "usuario_id")
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
     @ManyToOne
     @MapsId("conquistaId")
-    @JoinColumn(name = "conquista_id")
+    @JoinColumn(name = "conquista_id", nullable = false)
     private Conquista conquista;
 
     @Temporal(TemporalType.DATE)
@@ -89,4 +89,3 @@ public class UsuarioConquista {
                 '}';
     }
 }
-

@@ -8,7 +8,8 @@ import java.sql.Timestamp;
 public class LogFraude {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "log_fraude_seq")
+    @SequenceGenerator(name = "log_fraude_seq", sequenceName = "log_fraude_sequence", allocationSize = 1)
     private Long id;
 
     // Relacionamento com Usuario (paciente)
@@ -28,7 +29,7 @@ public class LogFraude {
     @Column(length = 1)
     private String riscoFraude; // 'S' ou 'N'
 
-    @Column(precision = 5, scale = 2)
+    @Column(precision = 5)
     private Double scoreFraude;
 
     @PrePersist

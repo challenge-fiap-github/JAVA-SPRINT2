@@ -7,7 +7,8 @@ import jakarta.persistence.*;
 public class Nivel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "nivel_seq")
+    @SequenceGenerator(name = "nivel_seq", sequenceName = "nivel_sequence", allocationSize = 1)
     private Long id;
 
     @Column(nullable = false, length = 100)
@@ -68,4 +69,3 @@ public class Nivel {
                 '}';
     }
 }
-

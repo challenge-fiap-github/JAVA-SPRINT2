@@ -9,7 +9,8 @@ import java.util.List;
 public class Usuario {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_seq")
+    @SequenceGenerator(name = "usuario_seq", sequenceName = "usuario_sequence", allocationSize = 1)
     private Long id;
 
     @Column(nullable = false, length = 100)
@@ -34,7 +35,6 @@ public class Usuario {
     private String telefone;
 
     // Relacionamentos com outras entidades
-
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pontuacao> pontuacoes;
 
@@ -231,4 +231,3 @@ public class Usuario {
                 '}';
     }
 }
-

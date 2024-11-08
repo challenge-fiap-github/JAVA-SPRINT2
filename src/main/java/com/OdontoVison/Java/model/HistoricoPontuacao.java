@@ -8,7 +8,8 @@ import java.util.Date;
 public class HistoricoPontuacao {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "historico_pontuacao_seq")
+    @SequenceGenerator(name = "historico_pontuacao_seq", sequenceName = "historico_pontuacao_sequence", allocationSize = 1)
     private Long id;
 
     // Relacionamento com Usuario
@@ -19,6 +20,7 @@ public class HistoricoPontuacao {
     @Temporal(TemporalType.DATE)
     private Date dataConsulta;
 
+    @Column(nullable = false)
     private Integer pontosGanhos;
 
     private Integer pontosTotais;
@@ -105,4 +107,3 @@ public class HistoricoPontuacao {
                 '}';
     }
 }
-

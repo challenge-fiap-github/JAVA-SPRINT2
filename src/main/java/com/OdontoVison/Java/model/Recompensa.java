@@ -8,7 +8,8 @@ import java.util.Date;
 public class Recompensa {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "recompensa_seq")
+    @SequenceGenerator(name = "recompensa_seq", sequenceName = "recompensa_sequence", allocationSize = 1)
     private Long id;
 
     @Column(nullable = false, length = 255)
@@ -92,4 +93,3 @@ public class Recompensa {
                 '}';
     }
 }
-

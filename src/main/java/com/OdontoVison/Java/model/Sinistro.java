@@ -5,11 +5,11 @@ import java.util.Date;
 
 @Entity
 @Table(name = "sinistro")
-
 public class Sinistro {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sinistro_seq")
+    @SequenceGenerator(name = "sinistro_seq", sequenceName = "sinistro_sequence", allocationSize = 1)
     private Long id;
 
     // Relacionamento com Usuario (paciente)
@@ -27,7 +27,7 @@ public class Sinistro {
     @Column(nullable = false, length = 1)
     private String riscoFraude; // 'S' ou 'N'
 
-    @Column(precision = 5, scale = 2)
+    @Column(precision = 5)
     private Double scoreFraude;
 
     @Column(length = 255)

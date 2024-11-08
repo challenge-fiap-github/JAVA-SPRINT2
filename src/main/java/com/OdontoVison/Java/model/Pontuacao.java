@@ -4,21 +4,28 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
+@Table(name = "pontuacao")
 public class Pontuacao {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pontuacao_seq")
+    @SequenceGenerator(name = "pontuacao_seq", sequenceName = "pontuacao_sequence", allocationSize = 1)
     private Long id;
 
+    @Column(nullable = false)
     private Integer pontos;
+
+    @Column(nullable = false)
     private Integer pontosAcumulados;
+
+    @Column(length = 50)
     private String tipo;
 
     @Temporal(TemporalType.DATE)
     private Date dataRegistro;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id")
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
     // Getters e setters para os campos
@@ -74,5 +81,35 @@ public class Pontuacao {
     // Método auxiliar para obter o ID do usuário
     public Long getUsuarioId() {
         return this.usuario != null ? this.usuario.getId() : null;
+    }
+
+    // Método equals baseado no campo 'id'
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Pontuacao pontuacao = (Pontuacao) o;
+
+        return id != null ? id.equals(pontuacao.id) : pontuacao.id == null;
+    }
+
+    // Método hashCode baseado no campo 'id'
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+
+    // Método toString
+    @Override
+    public String toString() {
+        return "Pontuacao{" +
+                "id=" + id +
+                ", pontos=" + pontos +
+                ", pontosAcumulados=" + pontosAcumulados +
+                ", tipo='" + tipo + '\'' +
+                ", dataRegistro=" + dataRegistro +
+                ", usuario=" + (usuario != null ? usuario.getId() : "null") +
+                '}';
     }
 }

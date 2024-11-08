@@ -68,4 +68,3 @@ public class UsuarioNivelId implements Serializable {
                 '}';
     }
 }
-

@@ -8,7 +8,8 @@ import java.sql.Timestamp;
 public class LogAtividade {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "log_atividade_seq")
+    @SequenceGenerator(name = "log_atividade_seq", sequenceName = "log_atividade_sequence", allocationSize = 1)
     private Long id;
 
     // Relacionamento com Usuario
@@ -88,4 +89,3 @@ public class LogAtividade {
                 '}';
     }
 }
-
