@@ -144,41 +144,193 @@ Para acessar o console do H2 e visualizar os dados, inicie a aplicação e naveg
 
 ## Endpoints REST
 
-### Usuário
-- `POST /api/usuarios/registrar`: Cadastro de novos usuários.
-- `POST /api/usuarios/autenticar`: Autenticação de usuários.
-- `GET /api/usuarios/{id}`: Obter detalhes de um usuário específico.
-- `GET /api/usuarios`: Listar todos os usuários (apenas para fins administrativos).
-- `PUT /api/usuarios/{id}`: Atualizar informações de um usuário.
-- `DELETE /api/usuarios/{id}`: Deletar um usuário (opcional).
+Para documentar todos os endpoints para o README, aqui está uma estrutura que inclui os principais endpoints com as descrições básicas de cada um. Vou considerar os nomes convencionais dos endpoints com base nos controladores recebidos.
 
-### Consulta
-- `POST /api/consultas`: Agendamento de consultas.
-- `GET /api/consultas/{id}`: Detalhes de uma consulta.
+API Documentation
 
-### Pontuação
-- `GET /api/pontuacao/{usuarioId}`: Consulta da pontuação acumulada.
-- `POST /api/pontuacao/bonus`: Aplicar pontos bônus após validação.
+A seguir está a lista de endpoints disponíveis na API da OdontoVision.
 
-### Recompensas
-- `GET /api/recompensas`: Lista de recompensas disponíveis.
-- `GET /api/recompensas/{id}`: Obter detalhes de uma recompensa específica.
-- `POST /api/recompensas/{id}/resgatar/usuario/{usuarioId}`: Resgatar uma recompensa para um usuário.
+Usuarios
 
-### Sinistros
-- `GET /api/sinistros/usuario/{usuarioId}`: Listar sinistros de um usuário.
-- `GET /api/sinistros/{id}`: Obter detalhes de um sinistro específico.
-- `POST /api/sinistros`: Registrar um novo sinistro.
+Registro de usuário
 
-### Usuário Recompensas
-- `GET /api/usuarios/{usuarioId}/recompensas`: Listar recompensas resgatadas por um usuário.
-- `GET /api/usuarios/{usuarioId}/recompensas/{id}`: Obter detalhes de uma recompensa resgatada por ID.
+	•	POST /api/usuarios/registrar
+	•	Descrição: Cadastra um novo usuário.
+	•	Corpo da requisição: JSON com as informações do usuário.
 
-### Validação Checklist
-- `POST /api/validacoes-checklist/usuario/{usuarioId}/consulta/{consultaId}`: Validar checklist de um usuário para uma consulta.
-- `GET /api/validacoes-checklist/{id}`: Obter detalhes de uma validação de checklist.
-- `GET /api/validacoes-checklist/usuario/{usuarioId}`: Listar todas as validações de checklist de um usuário específico.
-- `GET /api/validacoes-checklist`: Listar todas as validações de checklist (geral).
+Autenticação de usuário
+
+	•	POST /api/usuarios/autenticar
+	•	Descrição: Autentica um usuário.
+	•	Corpo da requisição: JSON com email e senha.
+
+Obter usuário por ID
+
+	•	GET /api/usuarios/{id}
+	•	Descrição: Obtém os detalhes de um usuário específico pelo ID.
+
+Atualizar usuário
+
+	•	PUT /api/usuarios/{id}
+	•	Descrição: Atualiza as informações de um usuário específico pelo ID.
+	•	Corpo da requisição: JSON com as novas informações do usuário.
+
+Deletar usuário
+
+	•	DELETE /api/usuarios/{id}
+	•	Descrição: Remove um usuário pelo ID.
+
+Pontuacoes
+
+Listar pontuações de um usuário
+
+	•	GET /api/pontuacoes/usuario/{usuarioId}
+	•	Descrição: Lista todas as pontuações de um usuário específico.
+
+Obter pontuação por ID
+
+	•	GET /api/pontuacoes/{id}
+	•	Descrição: Obtém os detalhes de uma pontuação específica pelo ID.
+
+Registrar nova pontuação
+
+	•	POST /api/pontuacoes/usuario/{usuarioId}
+	•	Descrição: Registra uma nova pontuação para um usuário específico.
+	•	Corpo da requisição: JSON com os detalhes da pontuação.
+
+Recompensas
+
+Listar recompensas
+
+	•	GET /api/recompensas
+	•	Descrição: Lista todas as recompensas.
+
+Obter recompensa por ID
+
+	•	GET /api/recompensas/{id}
+	•	Descrição: Obtém detalhes de uma recompensa específica pelo ID.
+
+Registrar nova recompensa
+
+	•	POST /api/recompensas
+	•	Descrição: Cadastra uma nova recompensa.
+	•	Corpo da requisição: JSON com os detalhes da recompensa.
+
+Conquistas
+
+Listar conquistas
+
+	•	GET /api/conquistas
+	•	Descrição: Lista todas as conquistas.
+
+Obter conquista por ID
+
+	•	GET /api/conquistas/{id}
+	•	Descrição: Obtém detalhes de uma conquista específica pelo ID.
+
+Registrar nova conquista
+
+	•	POST /api/conquistas
+	•	Descrição: Cadastra uma nova conquista.
+	•	Corpo da requisição: JSON com os detalhes da conquista.
+
+HistoricoPontuacao
+
+Listar histórico de pontuação
+
+	•	GET /api/historicoPontuacao
+	•	Descrição: Lista o histórico de pontuação.
+
+Obter histórico de pontuação por ID
+
+	•	GET /api/historicoPontuacao/{id}
+	•	Descrição: Obtém detalhes de um histórico de pontuação específico pelo ID.
+
+Registrar histórico de pontuação
+
+	•	POST /api/historicoPontuacao
+	•	Descrição: Cadastra um novo histórico de pontuação.
+	•	Corpo da requisição: JSON com os detalhes do histórico.
+
+LogAtividade
+
+Listar logs de atividade
+
+	•	GET /api/logAtividade
+	•	Descrição: Lista todos os logs de atividade.
+
+Obter log de atividade por ID
+
+	•	GET /api/logAtividade/{id}
+	•	Descrição: Obtém detalhes de um log de atividade específico pelo ID.
+
+LogFraude
+
+Listar logs de fraude
+
+	•	GET /api/logFraude
+	•	Descrição: Lista todos os logs de fraude.
+
+Obter log de fraude por ID
+
+	•	GET /api/logFraude/{id}
+	•	Descrição: Obtém detalhes de um log de fraude específico pelo ID.
+
+Niveis
+
+Listar níveis
+
+	•	GET /api/niveis
+	•	Descrição: Lista todos os níveis.
+
+Obter nível por ID
+
+	•	GET /api/niveis/{id}
+	•	Descrição: Obtém detalhes de um nível específico pelo ID.
+
+Registrar novo nível
+
+	•	POST /api/niveis
+	•	Descrição: Cadastra um novo nível.
+	•	Corpo da requisição: JSON com os detalhes do nível.
+
+Sinistros
+
+Listar sinistros
+
+	•	GET /api/sinistros
+	•	Descrição: Lista todos os sinistros.
+
+Obter sinistro por ID
+
+	•	GET /api/sinistros/{id}
+	•	Descrição: Obtém detalhes de um sinistro específico pelo ID.
+
+Registrar novo sinistro
+
+	•	POST /api/sinistros
+	•	Descrição: Cadastra um novo sinistro.
+	•	Corpo da requisição: JSON com os detalhes do sinistro.
+
+ValidacaoChecklist
+
+Listar validações de checklist
+
+	•	GET /api/validacaoChecklist
+	•	Descrição: Lista todas as validações de checklist.
+
+Obter validação de checklist por ID
+
+	•	GET /api/validacaoChecklist/{id}
+	•	Descrição: Obtém detalhes de uma validação de checklist específica pelo ID.
+
+Registrar nova validação de checklist
+
+	•	POST /api/validacaoChecklist
+	•	Descrição: Cadastra uma nova validação de checklist.
+	•	Corpo da requisição: JSON com os detalhes da validação.
+
+Cada endpoint permite que a aplicação interaja com as entidades principais da API, fornecendo as funcionalidades de CRUD necessárias para gerenciamento.
 
 ## Arquitetura RESTful com HATEOAS
 
