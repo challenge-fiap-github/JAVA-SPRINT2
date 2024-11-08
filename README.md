@@ -1,6 +1,8 @@
 
 # Projeto OdontoVision - Challenge Odontoprev
 
+## Integrantes
+
 ## Visão Geral
 
 Este projeto é uma aplicação Spring Boot desenvolvida para a **OdontoVision** como parte do Challenge Odontoprev. O objetivo principal é reduzir a ocorrência de sinistros em atendimentos odontológicos por meio de incentivos preventivos e monitoramento proativo, utilizando IA para identificar possíveis fraudes.
@@ -9,21 +11,25 @@ Este projeto é uma aplicação Spring Boot desenvolvida para a **OdontoVision**
 
 Nessa Sprint alteramos as regras de negócio e unificamos o banco de dados, por tanto foi necessário refazer o código java.
 
+## Diagrama de Classes
+
+
+## Vídeo
+
+
 ## Funcionalidades
 
 - **Gamificação**: Incentivo ao paciente para consultas preventivas e bons hábitos de higiene bucal, com sistema de pontuação e recompensas.
 - **Registro de Diagnósticos**: Histórico detalhado dos diagnósticos para cada paciente.
-- **Análise Preditiva**: Uso de IA para detectar padrões de comportamento anômalos que indicam uso excessivo ou possíveis fraudes.
+- **Análise Preditiva**: Uso de IA para detectar padrões de comportamento anômalos que indicam uso excessivo ou possíveis fraudes. (Não será aplicado em Java)
 - **Sistema de Pontuação e Recompensas**: Acúmulo de pontos em consultas preventivas e resgate de recompensas.
 
 ## Tecnologias Utilizadas
 
 - **Spring Boot 3.3.5**: Framework Java para o backend.
 - **Banco de Dados**: Oracle (produção) e H2 (testes).
-- **Segurança**: Spring Security para autenticação e autorização. (Decidimos por deixar esse ponto para a Sprint 3)
 - **API RESTful**: Seguindo boas práticas e nível 3 de maturidade REST (HATEOAS).
 - **JPA/Hibernate**: Persistência e mapeamento objeto-relacional.
-- **IA**: Random Forest para análise de padrões e monitoramento de fraudes.
 
 ## Estrutura do Projeto
 
@@ -36,7 +42,6 @@ A aplicação foi estruturada em camadas para facilitar a organização do códi
 - **`service`**: Camada de lógica de negócios, onde as regras e funcionalidades principais são implementadas (ex: `PontuacaoService`, `ConsultaService`).
 - **`controller`**: Controladores que expõem endpoints RESTful para interação com o cliente (ex: `PacienteController`, `DentistaController`).
 - **`dto`**: Objetos de Transferência de Dados (Data Transfer Objects) usados para padronizar requisições e respostas da API.
-- **`config`**: Configurações gerais, incluindo segurança (Spring Security) e integrações com APIs externas.
 - **`exception`**: Classes para tratamento de exceções personalizadas, ajudando a lidar com erros de maneira estruturada.
 
 ## Dependências Principais (`pom.xml`)
@@ -91,13 +96,6 @@ A aplicação foi estruturada em camadas para facilitar a organização do códi
     <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-test</artifactId>
-        <scope>test</scope>
-    </dependency>
-
-    <!-- Segurança para testes -->
-    <dependency>
-        <groupId>org.springframework.security</groupId>
-        <artifactId>spring-security-test</artifactId>
         <scope>test</scope>
     </dependency>
 
@@ -394,5 +392,4 @@ Para executar a aplicação localmente, siga estes passos:
    ./mvnw spring-boot:run
    ```
 
-4. A aplicação estará disponível em [http://localhost:8080](http://localhost:8080).
 
