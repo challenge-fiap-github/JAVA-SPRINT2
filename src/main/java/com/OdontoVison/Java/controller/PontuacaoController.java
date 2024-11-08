@@ -59,4 +59,16 @@ public class PontuacaoController {
 
         return ResponseEntity.created(linkTo(methodOn(PontuacaoController.class).obterPontuacao(novaPontuacao.getId())).toUri()).body(resource);
     }
+
+    // Aplicar pontos bônus após validação
+    @PostMapping("/bonus/usuario/{usuarioId}")
+    public ResponseEntity<EntityModel<Pontuacao>> aplicarBonus(@PathVariable Long usuarioId, @RequestBody Pontuacao pontuacao) {
+        Pontuacao novaPontuacaoBonus = pontuacaoService.aplicarBonus(usuarioId, pontuacao);
+        EntityModel<Pontuacao> resource = EntityModel.of(novaPontuacaoBonus,
+                linkTo(methodOn(PontuacaoController.class).obterPontuacao(novaPontuacaoBonus.getId())).withSelfRel(),
+                linkTo(methodOn(PontuacaoController.class).listarPontuacoesPorUsuario(usuarioId)).withRel("pontuacoes-usuario"));
+
+        return ResponseEntity.created(linkTo(methodOn(PontuacaoController.class).obterPontuacao(novaPontuacaoBonus.getId())).toUri()).body(resource);
+    }
+
 }

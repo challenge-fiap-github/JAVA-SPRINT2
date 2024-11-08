@@ -69,4 +69,20 @@ public class PontuacaoService {
 
         pontuacaoRepository.save(pontuacaoDeduzida);
     }
+
+    // Aplicar pontos bônus após validação
+    public Pontuacao aplicarBonus(Long usuarioId, Pontuacao pontuacaoBonus) {
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new UsuarioNotFoundException("Usuário com ID " + usuarioId + " não encontrado."));
+
+        pontuacaoBonus.setUsuario(usuario);
+        pontuacaoBonus.setDataRegistro(new java.util.Date());
+        pontuacaoBonus.setTipo("Bônus");
+
+        // Calcular pontos acumulados com o bônus aplicado
+        Integer pontosAcumulados = pontuacaoRepository.sumPontosByUsuarioId(usuarioId);
+        pontuacaoBonus.setPontosAcumulados((pontosAcumulados != null ? pontosAcumulados : 0) + pontuacaoBonus.getPontos());
+
+        return pontuacaoRepository.save(pontuacaoBonus);
+    }
 }
