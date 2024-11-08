@@ -9,12 +9,15 @@ import java.util.List;
 
 @Repository
 public interface PontuacaoRepository extends JpaRepository<Pontuacao, Long> {
-    List<Pontuacao> findByUsuarioId(Long usuarioId);
 
+    // Encontra uma lista de pontuações pelo ID do usuário
+    List<Pontuacao> findByUsuario_Id(Long usuarioId);
+
+    // Soma todos os pontos de um usuário específico
     @Query("SELECT SUM(p.pontos) FROM Pontuacao p WHERE p.usuario.id = :usuarioId")
     Integer sumPontosByUsuarioId(Long usuarioId);
 
-    //método para somar os pontos deduzidos
+    // Soma apenas os pontos deduzidos (pontos negativos) de um usuário específico
     @Query("SELECT SUM(p.pontos) FROM Pontuacao p WHERE p.usuario.id = :usuarioId AND p.pontos < 0")
     Integer sumPontosDeduzidosByUsuarioId(Long usuarioId);
 }

@@ -22,7 +22,7 @@ public class PontuacaoService {
 
     // Listar pontuações por usuário
     public List<Pontuacao> listarPontuacoesPorUsuario(Long usuarioId) {
-        return pontuacaoRepository.findByUsuarioId(usuarioId);
+        return pontuacaoRepository.findByUsuario_Id(usuarioId); // Ajuste aqui
     }
 
     // Obter pontuação por ID
