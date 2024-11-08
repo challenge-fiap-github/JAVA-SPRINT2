@@ -1,11 +1,9 @@
 package service;
 
 import model.Conquista;
-import model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import repository.ConquistaRepository;
-import repository.UsuarioConquistaRepository;
 import repository.UsuarioRepository;
 
 import java.util.List;
@@ -13,14 +11,15 @@ import java.util.List;
 @Service
 public class ConquistaService {
 
-    @Autowired
-    private ConquistaRepository conquistaRepository;
+    private final ConquistaRepository conquistaRepository;
+    private final UsuarioRepository usuarioRepository;
 
     @Autowired
-    private UsuarioConquistaRepository usuarioConquistaRepository;
-
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    public ConquistaService(ConquistaRepository conquistaRepository,
+                            UsuarioRepository usuarioRepository) {
+        this.conquistaRepository = conquistaRepository;
+        this.usuarioRepository = usuarioRepository;
+    }
 
     // Listar conquistas
     public List<Conquista> listarConquistas() {
@@ -35,7 +34,7 @@ public class ConquistaService {
 
     // Listar conquistas por usuário
     public List<Conquista> listarConquistasPorUsuario(Long usuarioId) {
-        Usuario usuario = usuarioRepository.findById(usuarioId)
+        usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
         return conquistaRepository.findConquistasByUsuario(usuarioId);
     }
