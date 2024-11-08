@@ -35,6 +35,10 @@ public class UsuarioController {
     @PostMapping("/autenticar")
     public ResponseEntity<EntityModel<Usuario>> autenticarUsuario(@RequestBody Usuario credenciais) {
         Usuario usuarioAutenticado = usuarioService.autenticarUsuario(credenciais.getEmail(), credenciais.getSenha());
+        if (usuarioAutenticado == null) {
+            return ResponseEntity.status(401).build(); // Unauthorized caso as credenciais sejam inválidas
+        }
+
         EntityModel<Usuario> resource = EntityModel.of(usuarioAutenticado,
                 linkTo(methodOn(UsuarioController.class).obterUsuario(usuarioAutenticado.getId())).withSelfRel(),
                 linkTo(methodOn(UsuarioController.class).listarUsuarios()).withRel("usuarios"));
@@ -46,6 +50,10 @@ public class UsuarioController {
     @GetMapping("/{id}")
     public ResponseEntity<EntityModel<Usuario>> obterUsuario(@PathVariable Long id) {
         Usuario usuario = usuarioService.obterUsuarioPorId(id);
+        if (usuario == null) {
+            return ResponseEntity.notFound().build(); // Retorna 404 se o usuário não existir
+        }
+
         EntityModel<Usuario> resource = EntityModel.of(usuario,
                 linkTo(methodOn(UsuarioController.class).obterUsuario(id)).withSelfRel(),
                 linkTo(methodOn(UsuarioController.class).listarUsuarios()).withRel("usuarios"));
@@ -73,8 +81,13 @@ public class UsuarioController {
     // Atualizar informações do usuário
     @PutMapping("/{id}")
     public ResponseEntity<EntityModel<Usuario>> atualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuarioAtualizado) {
-        Usuario usuario = usuarioService.atualizarUsuario(id, usuarioAtualizado);
-        EntityModel<Usuario> resource = EntityModel.of(usuario,
+        Usuario usuario = usuarioService.obterUsuarioPorId(id);
+        if (usuario == null) {
+            return ResponseEntity.notFound().build(); // Retorna 404 se o usuário não existir
+        }
+
+        Usuario usuarioAtualizadoDb = usuarioService.atualizarUsuario(id, usuarioAtualizado);
+        EntityModel<Usuario> resource = EntityModel.of(usuarioAtualizadoDb,
                 linkTo(methodOn(UsuarioController.class).obterUsuario(id)).withSelfRel(),
                 linkTo(methodOn(UsuarioController.class).listarUsuarios()).withRel("usuarios"));
 
@@ -84,6 +97,11 @@ public class UsuarioController {
     // Deletar usuário (opcional)
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarUsuario(@PathVariable Long id) {
+        Usuario usuario = usuarioService.obterUsuarioPorId(id);
+        if (usuario == null) {
+            return ResponseEntity.notFound().build(); // Retorna 404 se o usuário não existir
+        }
+
         usuarioService.deletarUsuario(id);
         return ResponseEntity.noContent().build();
     }
