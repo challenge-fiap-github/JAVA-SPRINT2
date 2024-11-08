@@ -1,5 +1,6 @@
 package service;
 
+import exception.RecompensaNotFoundException;
 import exception.UsuarioNotFoundException;
 import exception.InsufficientPointsException;
 import exception.RecompensaUnavailableException;
