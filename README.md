@@ -2,6 +2,11 @@
 # Projeto OdontoVision - Challenge Odontoprev
 
 ## Integrantes
+Sabrina da Motta Café (553568)
+
+Luis Henrique Oliveira da Silva (552692)
+
+Matheus Duarte Oliveira (554199)
 
 ## Visão Geral
 
@@ -13,9 +18,17 @@ Nessa Sprint alteramos as regras de negócio e unificamos o banco de dados, por 
 
 ## Diagrama de Classes
 
+![img.png](img.png)
 
 ## Vídeo
 
+Pitch
+
+https://youtu.be/BIlsZLR_mys 
+
+Explicação Aplicação Java
+
+https://youtu.be/MjJ8kCEXusM
 
 ## Funcionalidades
 
@@ -329,6 +342,8 @@ Registrar nova validação de checklist
 	•	Corpo da requisição: JSON com os detalhes da validação.
 
 Cada endpoint permite que a aplicação interaja com as entidades principais da API, fornecendo as funcionalidades de CRUD necessárias para gerenciamento.
+
+É importante ressaltar que a maioria dos endpoints ainda nao estão sendo completamnete utilizados, pois na proxima sprint vamos conectar com a API da livelo para a gamificação.
 
 ## Arquitetura RESTful com HATEOAS
 
